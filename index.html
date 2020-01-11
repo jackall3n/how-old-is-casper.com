@@ -43,45 +43,77 @@
     }
   </style>
   <script>
-    var SECOND = 1000;
-    var MINUTE = SECOND * 60;
-    var HOUR = MINUTE * 60;
-    var DAY = HOUR * 24;
-    var WEEK = DAY * 7;
+    const SECOND = 1000;
+    const MINUTE = SECOND * 60;
+    const HOUR = MINUTE * 60;
+    const DAY = HOUR * 24;
+    const WEEK = DAY * 7;
 
-    var birthday = new Date('2019-04-03T12:26:00');
-    var now = new Date();
+    const birthday = new Date('2019-04-03T12:26:00');
+    const now = new Date();
 
-    const hours = (from, to) => Math.floor((to.valueOf() - from.valueOf()) / HOUR);
-    const days = (from, to) => Math.floor((to.valueOf() - from.valueOf()) / DAY);
-    const weeks = (from, to) => Math.floor((to.valueOf() - from.valueOf()) / WEEK);
+    const yearDiff = now.getFullYear() - birthday.getFullYear();
+    const monthDiff = now.getMonth() - birthday.getMonth();
+    const dayDiff = now.getDate() - birthday.getDate();
 
-    const months = (from, to) => to.getMonth() - from.getMonth() +
-      (12 * (to.getFullYear() - from.getFullYear()))
+    // As fraction of month
+    const dayDiffFraction = (1 / 30) * dayDiff;
 
-    const years = (from, to) => to.getFullYear() - from.getFullYear();
+    // As fraction of year
+    const monthDiffFraction = (1 / 12) * (monthDiff + dayDiffFraction);
 
-    var values = {
-      hours: hours(birthday, now),
-      days: days(birthday, now),
-      weeks: weeks(birthday, now),
-      months: months(birthday, now),
-      years: years(birthday, now),
+    const values = {
+      hours: (now - birthday) / HOUR,
+      days: (now - birthday) / DAY,
+      weeks: (now - birthday) / WEEK,
+      months: yearDiff * 12 + monthDiff + dayDiffFraction,
+      years: yearDiff + monthDiffFraction
+    };
+
+    function getHeadline() {
+      // Age in months
+      if (values.months <= 19) {
+        const absMonths = Math.floor(values.months);
+        const isToday = Number.isInteger(values.months);
+        const remainderMonths = values.months % 1;
+        let fraction = '';
+        if (remainderMonths >= 0.5 && remainderMonths < 0.75) {
+          fraction = ' and a half';
+        }
+        if (remainderMonths >= 0.75) {
+          fracrion = ' and 3 quarter';
+        }
+        return `${absMonths}${fraction} months old ${isToday ? 'today!' : ''}`
+      }
+
+      if (values.years < 2) {
+        return 'nearly 2';
+      }
+
+      // Age in years
+      const absYears = Math.floor(values.years);
+      const isBirthday = Number.isInteger(values.years);
+      const remainderYears = values.years % 1;
+      let fraction = '';
+      if (remainderYears >= 0.25 && remainderYears < 0.5) {
+        fraction = ' and a quarter';
+      }
+      if (remainderYears >= 0.5 && remainderYears < 0.75) {
+        fraction = ' and a half';
+      }
+      if (remainderYears >= 0.75) {
+        fraction = ' and 3 quarter';
+      }
+      return `${absYears}${fraction} years old ${isBirthday ? 'today!' : ''}`
     }
 
-    var headline = `${values.years} years old`;
-    if (values.months <= 19) {
-      headline = `${values.months} months old`;
-    } else if (values.years < 2) {
-      headline = 'nearly 2';
-    }
   </script>
 </head>
 
 <body>
   <h1>
     Casper is
-    <script>document.write(headline)</script>
+    <script>document.write(getHeadline())</script>
   </h1>
   <div>
     <h2>or</h2>
@@ -90,7 +122,7 @@
         document.write(
           Object
             .entries(values)
-            .map(([key, value]) => `<li>${value.toLocaleString()} ${key} old</li>`)
+            .map(([key, value]) => `<li>${Math.floor(value).toLocaleString()} ${Math.floor(value) === 1 ? key.slice(0, -1) : key} old</li>`)
             .join('')
         )
       </script>
