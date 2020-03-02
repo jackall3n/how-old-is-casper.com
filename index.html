@@ -86,6 +86,13 @@
       years: yearDiff + monthDiffFraction
     };
 
+    function pluralize(value, pluralWord) {
+      if (value === 1) {
+        return pluralWord.slice(0, -1);
+      }
+      return pluralWord;
+    }
+
     function getHeadline() {
       // Age in months
       if (values.months <= 19) {
@@ -104,7 +111,7 @@
           }
           return [
             `almost ${absMonths + 1} months old`,
-            `( in ${daysUntilNextMonth} days )`
+            `( in ${daysUntilNextMonth} ${pluralize(daysUntilNextMonth, 'days')} )`
           ];
         }
 
@@ -155,7 +162,7 @@
         document.write(
           Object
             .entries(values)
-            .map(([key, value]) => `<li>${Math.floor(value).toLocaleString()} ${Math.floor(value) === 1 ? key.slice(0, -1) : key} old</li>`)
+            .map(([key, value]) => `<li>${Math.floor(value).toLocaleString()} ${pluralize(value, key)} old</li>`)
             .join('')
         )
       </script>
