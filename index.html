@@ -98,17 +98,26 @@
       if (values.months <= 19) {
         const absMonths = Math.floor(values.months);
         const remainderMonths = values.months % 1;
+        // We're gonna program like it's 1979
+        let daysUntilNextMonth = 0;
+        const date = new Date();
+        while (date.getDate() !== birthday.getDate()) {
+          date.setDate(date.getDate() + 1);
+          daysUntilNextMonth++
+        }
+
+        if (remainderMonths >= 0.5 && absMonths === 11) {
+          return [
+            'nearly 1',
+            `First birthday in ${daysUntilNextMonth} ${pluralize(daysUntilNextMonth, 'days')}!`
+          ]
+        }
+
         if (remainderMonths >= 0.5 && remainderMonths < 0.75) {
           return [`${absMonths} and a half months old`];
         }
+
         if (remainderMonths >= 0.75) {
-          // We're gonna program like it's 1979
-          let daysUntilNextMonth = 0;
-          const date = new Date();
-          while (date.getDate() !== birthday.getDate()) {
-            date.setDate(date.getDate() + 1);
-            daysUntilNextMonth++
-          }
           return [
             `almost ${absMonths + 1} months old`,
             `( in ${daysUntilNextMonth} ${pluralize(daysUntilNextMonth, 'days')} )`
