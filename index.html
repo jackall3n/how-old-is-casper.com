@@ -113,6 +113,10 @@
           ]
         }
 
+        if(absMonths === 12) {
+          return ['1'];
+        }
+
         if (remainderMonths >= 0.5 && remainderMonths < 0.75) {
           return [`${absMonths} and a half months old`];
         }
