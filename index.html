@@ -113,7 +113,7 @@
           ]
         }
 
-        if(absMonths === 12) {
+        if (absMonths === 12) {
           return ['1'];
         }
 
@@ -175,7 +175,7 @@
         document.write(
           Object
             .entries(values)
-            .map(([key, value]) => `<li>${Math.floor(value).toLocaleString()} ${pluralize(value, key)} old</li>`)
+            .map(([key, value]) => `<li>${Math.floor(value).toLocaleString()} ${pluralize(Math.floor(value), key)} old</li>`)
             .join('')
         )
       </script>
